@@ -1,6 +1,6 @@
 pipeline {
 	environment {
-		registry = "alendwahida/docker-pipeline"
+		registry = "https://hub.docker.com/r/alendwahida/docker-pipeline"
 		registryCredential = 'docker-hub-credentials'
 	}
 
