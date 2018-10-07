@@ -1,9 +1,9 @@
 pipeline {
-    agent { docker { image 'php' } }
+    agent { dockerfile true }
     stages {
         stage('build') {
             steps {
-                sh 'php --version'
+                sh 'apache2 --version'
             }
         }
     }
