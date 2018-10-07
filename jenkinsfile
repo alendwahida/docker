@@ -1,7 +1,8 @@
 pipeline {
 	environment {
-		registry = "https://hub.docker.com/r/alendwahida/docker-pipeline"
+		registry = "alendwahida/docker-pipeline"
 		registryCredential = 'docker-hub-credentials'
+		dockerImage = ''
 	}
 
 	agent any
@@ -19,10 +20,12 @@ pipeline {
 				sh 'curl http://180.250.125.66:4534'
 			}
 		}
-		stage('Deploy-docker') {
+		stage('Build-Deploy-docker') {
 			steps {
 				script {
 					docker.build registry + ":latest"
+					docker.withRegistry( '', registryCredential ) {
+            		dockerImage.push()
 				}
         	}
 		}
