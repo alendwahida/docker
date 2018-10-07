@@ -1,7 +1,13 @@
 pipeline {
-    agent any
-    stages {
-        stage('Build-docker') {
+	environment {
+		registry = "alendwahida/docker-pipeline"
+		registryCredential = 'docker-hub-credentials'
+	}
+
+	agent any
+
+	stages {
+		stage('Build-docker') {
 		steps {
 			sh 'docker container rm -f test-docker-1'
 			sh 'docker build -t test-docker .'
@@ -15,7 +21,10 @@ pipeline {
 	}
 	stage('Deploy-docker') {
 		steps {
-			echo 'Deployed !'
+			script {
+				docker.build registry + ":$BUILD_NUMBER"
+			}
+        }
 		}
 	}
     }
