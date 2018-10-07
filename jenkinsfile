@@ -1,17 +1,17 @@
 pipeline {
     agent { dockerfile true }
     stages {
-        stage('Build') {
+        stage('Build-docker') {
 		steps {
-			echo 'Build !'
+			sh 'docker build -t test-aja .'
 		}
 	}
-	stage('Testing') {
+	stage('Test-docker') {
 		steps {
 			echo 'Testing !'
 		}
 	}
-	stage('Deploy') {
+	stage('Deploy-docker') {
 		steps {
 			echo 'Deployed !'
 		}
