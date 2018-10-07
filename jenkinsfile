@@ -1,9 +1,10 @@
 pipeline {
-    agent { dockerfile true }
+    agent none
     stages {
         stage('Build-docker') {
 		steps {
-			sh 'docker build -t test-aja .'
+			sh 'docker build -t test-docker .'
+			sh 'docker run -d -p 4534:80 test-docker'
 		}
 	}
 	stage('Test-docker') {
