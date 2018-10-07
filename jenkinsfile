@@ -22,7 +22,7 @@ pipeline {
 		stage('Deploy-docker') {
 			steps {
 				script {
-					docker.build registry + "latest"
+					docker.build registry + ":latest"
 				}
         	}
 		}
