@@ -8,7 +8,7 @@ pipeline {
 	agent any
 
 	stages {
-		stage('Build-docker') {
+		stage('Build-Deploy-Local') {
 			steps {
 				sh 'docker container rm -f test-docker-1'
 				sh 'docker build -t test-docker .'
@@ -20,7 +20,7 @@ pipeline {
 				sh 'curl http://180.250.125.66:4534'
 			}
 		}
-		stage('Build-Deploy-docker') {
+		stage('Build-Push') {
 			steps {
 				withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
           			sh 'docker push alendwahida/docker-pipeline:latest'
