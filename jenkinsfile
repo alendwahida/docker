@@ -1,9 +1,9 @@
 pipeline {
-	environment {
-		registry = "alendwahida/docker-pipeline"
-		registryCredential = 'docker-hub-credentials'
-		dockerImage = ''
-	}
+	//environment {
+	//	registry = "alendwahida/docker-pipeline"
+	//	registryCredential = 'docker-hub-credentials'
+	//	dockerImage = ''
+	//}
 
 	agent any
 
