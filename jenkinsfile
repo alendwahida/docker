@@ -3,9 +3,9 @@ pipeline {
     stages {
         stage('Build-docker') {
 		steps {
-			sh 'docker container rm -f test-docker'
+			sh 'docker container rm -f test-docker-1'
 			sh 'docker build -t test-docker .'
-			sh 'docker run -d --name='test-docker' -p 4534:80 test-docker'
+			sh 'docker run -d --name test-docker-1 -p 4534:80 test-docker'
 		}
 	}
 	stage('Test-docker') {
