@@ -8,26 +8,26 @@ pipeline {
 
 	stages {
 		stage('Build-docker') {
-		steps {
-			sh 'docker container rm -f test-docker-1'
-			sh 'docker build -t test-docker .'
-			sh 'docker run -d --name test-docker-1 -p 4534:80 test-docker'
-		}
-	}
-	stage('Test-docker') {
-		steps {
-			sh 'curl http://180.250.125.66:4534/'
-		}
-	}
-	stage('Deploy-docker') {
-		steps {
-			script {
-				docker.build registry + ":$BUILD_NUMBER"
+			steps {
+				sh 'docker container rm -f test-docker-1'
+				sh 'docker build -t test-docker .'
+				sh 'docker run -d --name test-docker-1 -p 4534:80 test-docker'
 			}
-        }
+		}
+		stage('Test-docker') {
+			steps {
+				sh 'curl http://180.250.125.66:4534/'
+			}
+		}
+		stage('Deploy-docker') {
+			steps {
+				script {
+					docker.build registry + ":$BUILD_NUMBER"
+				}
+        	}
 		}
 	}
-    }
+	
 	post {
                 always {
                         echo 'always !'
