@@ -22,12 +22,9 @@ pipeline {
 		}
 		stage('Build-Deploy-docker') {
 			steps {
-				script {
-					docker.build registry + ":latest"
-					docker.withRegistry( '', registryCredential ) {
-            			dockerImage.push()
-            			}
-				}
+				withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
+          			sh 'docker push alendwahida/docker-pipeline:latest'
+        		}
         	}
 		}
 	}
