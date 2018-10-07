@@ -22,12 +22,12 @@ pipeline {
 		stage('Deploy-docker') {
 			steps {
 				script {
-					docker.build registry + ":$BUILD_NUMBER"
+					docker.build registry + "latest"
 				}
         	}
 		}
 	}
-	
+
 	post {
                 always {
                         echo 'always !'
