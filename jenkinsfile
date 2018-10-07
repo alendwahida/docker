@@ -10,7 +10,7 @@ pipeline {
 	}
 	stage('Test-docker') {
 		steps {
-			echo 'Testing !'
+			sh 'ping http://180.250.125.66:4534/'
 		}
 	}
 	stage('Deploy-docker') {
