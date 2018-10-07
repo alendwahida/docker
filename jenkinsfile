@@ -6,17 +6,6 @@ pipeline {
 			echo 'Build !'
 		}
 	}
-	post {
-		always {
-			echo 'always !'
-		}
-		success {
-			echo 'success !'
-		}
-		failure {
-			echo ' Failed !'
-		}
-	}
 	stage('Testing') {
 		steps {
 			echo 'Testing !'
@@ -28,4 +17,16 @@ pipeline {
 		}
 	}
     }
+	post {
+                always {
+                        echo 'always !'
+                }
+                success {
+                        echo 'success !'
+                }
+                failure {
+                        echo ' Failed !'
+                }
+        }
+
 }
