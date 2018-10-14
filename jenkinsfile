@@ -8,31 +8,39 @@ pipeline {
 	agent any
 
 	stages {
-		stage('Build & Deploy Local') {
-			steps {
-				sh 'docker container rm -f test-docker-1'
-				sh 'docker build -t test-docker .'
-				sh 'docker run -d --name test-docker-1 -p 4534:80 test-docker'
-			}
-		}
-		stage('Test Container') {
-			steps {
-				sh 'curl http://180.250.125.66:4534'
-			}
-		}
-		stage('Push Registry') {
-			steps {
-				withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
-          			sh 'docker push alendwahida/docker-pipeline:latest'
-        		}
-        	}
-		}
+		try{
+			notifyBuild('STARTED')
+				stage('Build & Deploy Local') {
+					steps {
+						sh 'docker container rm -f test-docker-1'
+						sh 'docker build -t test-docker .'
+						sh 'docker run -d --name test-docker-1 -p 4534:80 test-docker'
+					}
+				}
+				stage('Test Container') {
+					steps {
+						sh 'curl http://180.250.125.66:4534'
+					}
+				}
+				stage('Push Registry') {
+					steps {
+						withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
+		          			sh 'docker push alendwahida/docker-pipeline:latest'
+		        		}
+		        	}
+				}
+				} catch (e){
+					currentBuild.result = "FAILED"
+    				throw e
+				} finally{
+					notifyBuild(currentBuild.result)
+				}
 	}
 
 	post {
                 always {
                         echo 'always !'
-			slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+						slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
                 }
                 success {
                         echo 'success !'
@@ -42,4 +50,29 @@ pipeline {
                 }
         }
 
+	def notifyBuild(String buildStatus = 'STARTED') {
+			// build status of null means successful
+			buildStatus =  buildStatus ?: 'SUCCESSFUL'
+
+  			// Default values
+  			def colorName = 'RED'
+			def colorCode = '#FF0000'
+			def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+			def summary = "${subject} (${env.BUILD_URL})"
+
+  			// Override default values based on build status
+			  if (buildStatus == 'STARTED') {
+			    color = 'YELLOW'
+			    colorCode = '#FFFF00'
+			  } else if (buildStatus == 'SUCCESSFUL') {
+			    color = 'GREEN'
+			    colorCode = '#00FF00'
+			  } else {
+			    color = 'RED'
+			    colorCode = '#FF0000'
+			  }
+
+			  // Send notifications
+			  slackSend (color: colorCode, message: summary)
+	}
 }
